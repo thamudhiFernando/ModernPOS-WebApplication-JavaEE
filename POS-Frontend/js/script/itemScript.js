@@ -24,6 +24,7 @@ function getAllItems() {
                 + "<td>" + item.description + "</td>"
                 + "<td>" + item.qty + "</td>"
                 + "<td>" + item.unitPrice + "</td>"
+                + "<td><img src='images/recyclebin.png' width='30px'></td>"
                 + "</tr>"
             $("table tbody").append(html);
         });
@@ -70,6 +71,7 @@ $("#btn-save").click(function () {
                         + "<td>" + item.description + "</td>"
                         + "<td>" + item.qty + "</td>"
                         + "<td>" + item.unitPrice + "</td>"
+                        + "<td><img src='images/recyclebin.png' width='30px'></td>"
                         + "</tr>"
                     $("table tbody").append(html);
                 });

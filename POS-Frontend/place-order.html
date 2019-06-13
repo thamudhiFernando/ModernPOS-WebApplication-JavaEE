@@ -68,14 +68,14 @@
                 <div class="row">
                     <div class="col-12">
                         <div class="form-group">
-                            <label>Order ID: OD001</label>
+                            <label>Order ID: <span id="orderID">OD001</span></label>
                         </div>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-12">
                         <div class="form-group">
-                            <label>Order Date: 2019-05-01</label>
+                            <label >Order Date: <span id="OrderDate">2019-06-13</span></label>
                         </div>
                     </div>
                 </div>
@@ -104,15 +104,15 @@
                     </div>
                     <div class="col-12 col-lg-4">
                         <label>Description</label>
-                        <label class="form-control" id="itemName"></label>
+                        <label class="form-control" id="txtitemName"></label>
                     </div>
                     <div class="col-12 col-lg-2 text-center">
                         <label>Unit Price</label>
-                        <label class="form-control" id="itemPrice"></label>
+                        <label class="form-control" id="txtitemPrice"></label>
                     </div>
                     <div class="col-12 col-lg-2 text-center">
                         <label>Qty. on Hand</label>
-                        <label class="form-control" id="itemQty"></label>
+                        <label class="form-control" id="txtitemQty"></label>
                     </div>
                     <div class="col-12 col-lg-2 text-center">
                         <label>Order Qty. </label>
@@ -152,7 +152,7 @@
                         <h2>Total: <span id="total-heading"></span> </h2>
                     </div>
                     <div class="col-12 col-lg-6 text-right">
-                        <button class="btn btn-primary">Place Order</button>
+                        <button class="btn btn-primary" id="save-order">Place Order</button>
                     </div>
                 </div>
             </section>

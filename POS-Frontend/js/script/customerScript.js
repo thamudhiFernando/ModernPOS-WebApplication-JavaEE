@@ -7,6 +7,7 @@ switch (document.readyState) {
     default:
         alert("nothing");
 }
+
 //--------------------------------------load Customers------------------------------------
 function getAllCustomers() {
     var ajaxGetConfig = {
@@ -22,6 +23,7 @@ function getAllCustomers() {
                 + "<td>" + customer.id + "</td>"
                 + "<td>" + customer.name + "</td>"
                 + "<td>" + customer.address + "</td>"
+                + "<td><img src='images/recyclebin.png' width='30px'></td>"
                 + "</tr>"
             $("table tbody").append(html);
         });
@@ -65,6 +67,7 @@ $("#btn-save").click(function () {
                         + "<td>" + customer.id + "</td>"
                         + "<td>" + customer.name + "</td>"
                         + "<td>" + customer.address + "</td>"
+                        + "<td><img src='images/recyclebin.png' width='30px'></td>"
                         + "</tr>"
                     $("table tbody").append(html);
                 });
@@ -92,3 +95,4 @@ function clearFields() {
     $("#txtCustomerIName").val("");
     $("#txtCustomerAddress").val("");
 }
+
