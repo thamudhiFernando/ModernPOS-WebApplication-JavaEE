@@ -19,6 +19,7 @@ import java.sql.SQLException;
 
 @WebServlet(urlPatterns = "/order")
 public class OrderServlet extends HttpServlet {
+
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         ServletInputStream inputStream = req.getInputStream();
@@ -28,22 +29,26 @@ public class OrderServlet extends HttpServlet {
         String orderid = order.getString("orderid");
         String orderdate = order.getString("orderdate");
         String orderamount = order.getString("orderamount");
-
+        String custid = order.getString("custid");
         BasicDataSource dbpool = (BasicDataSource) getServletContext().getAttribute("dbpool");
         Connection connection = null;
         PrintWriter out = resp.getWriter();
         try {
             connection = dbpool.getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO Orders VALUES (?,?,?)");
+            connection.setAutoCommit(true);
+            PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO Orders VALUES (?,?,?,?)");
             preparedStatement.setObject(1, orderid);
             preparedStatement.setObject(2, orderdate);
             preparedStatement.setObject(3, orderamount);
+            preparedStatement.setObject(4, custid);
 
             boolean result = preparedStatement.executeUpdate() > 0;
 
             if (result) {
+                connection.commit();
                 out.println("true");
             } else {
+                connection.rollback();
                 out.println("false");
             }
         } catch (SQLException e) {

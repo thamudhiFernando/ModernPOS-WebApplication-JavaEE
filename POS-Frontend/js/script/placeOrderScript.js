@@ -119,8 +119,9 @@ $("#save-order").click(function () {
     var orderid = $("#orderID").text();
     var orderdate = $("#OrderDate").text();
     var orderamount = $("#total-heading").text();
+    var custid = $("#selectCustomerID").val()
 
-    var  neworder = {orderid: orderid, orderdate: orderdate, orderamount: orderamount};
+    var  neworder = {orderid: orderid, orderdate: orderdate, orderamount: orderamount,custid:custid};
 
     var postAjaxConfig = {
         method: "POST",
