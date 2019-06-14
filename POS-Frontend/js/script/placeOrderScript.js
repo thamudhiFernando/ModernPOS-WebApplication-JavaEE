@@ -61,6 +61,7 @@ function getAllItems(value) {
 
 //--------------------------------------Customer Combo Select------------------------------------
 $("#selectCustomerID").click(function () {
+    $("#selectCustomerID").css("border-color","lightgrey");
     getAllCustomers("clicked");
 })
 
@@ -85,21 +86,43 @@ $("#orderQtyField").keydown(function () {
     }
 })
 
-
 function loadTable(orderItemCode,orderItemDescription,orderItemUnitPrice,orderItemQty,amount) {
-    var row="<tr>" +
-        "<td>"+orderItemCode+"</td>" +
-        "<td>"+orderItemDescription+"</td>" +
-        "<td>"+orderItemQty+"</td>" +
-        "<td>"+orderItemUnitPrice+"</td>" +
-        "<td>"+amount+"</td>" +
-        "<td><img src='images/recyclebin.png' width='30px'> </td>" +
-        "</tr>";
-    $('#tbody').append(row);
+    var isExisting = checkAlreadyInTable();
+    if (!isExisting) {
+        var row="<tr>" +
+            "<td>"+orderItemCode+"</td>" +
+            "<td>"+orderItemDescription+"</td>" +
+            "<td>"+orderItemQty+"</td>" +
+            "<td>"+orderItemUnitPrice+"</td>" +
+            "<td>"+amount+"</td>" +
+            "<td><img src='images/recyclebin.png' width='30px'> </td>" +
+            "</tr>";
+        $('#tbody').append(row);
+    }
+    clearFields();
+
+    $('tbody tr td img').click(function () {
+        var row =  $(this).parents('tr');
+        console.log(row)
+        $(row).remove();
+    });
 }
 
 
 $("#save-order").click(function () {
+
+    var custName = $("#customerName").text();
+    if ($.trim(custName).length == 0){
+        alert("Select Customer");
+        $("#selectCustomerID").css("border-color","red");
+        $("#selectCustomerID").focus();
+        $("#orderQtyField").val("");
+        $("#txtitemName").text("");
+        $("#txtitemQty").text("");
+        $("#txtitemPrice").text("");
+        return;
+    }
+
     var orderid = $("#orderID").text();
     var orderdate = $("#OrderDate").text();
     var orderamount = $("#total-heading").text();
@@ -140,6 +163,10 @@ $("#save-order").click(function () {
         console.log(response)
         if (response) {
             alert("Order has been successfully added");
+            $("table tbody tr").remove();
+            $("#total-heading").text("");
+            $("#customerName").text("");
+            total = 0;
             clearFields();
         }else {
             alert("Failed to save order");
@@ -151,10 +178,32 @@ $("#save-order").click(function () {
 
 
 function clearFields() {
-    $("table tbody tr").remove();
     $("#orderQtyField").val("");
     $("#txtitemName").text("");
     $("#txtitemQty").text("");
     $("#txtitemPrice").text("");
-    total = 0;
+    $("#selectItemCode").focus();
+}
+
+function checkAlreadyInTable() {
+    var selectedCode = $("#selectItemCode").val();
+    var orderItemQty = $("#orderQtyField").val();
+    var orderItemUnitPrice = $("#txtitemPrice").text();
+    var x = 0;
+    while($("tbody tr").length > x){
+        x++;
+        var itemcode = $("table tr:nth-child("+x+") td:nth-child(1)").text();
+        var itemQty = $("table tr:nth-child("+x+") td:nth-child(3)").text();
+        var selectedRow = $("table tr:nth-child("+x+")");
+        var totalQty = parseInt(itemQty) + parseInt(orderItemQty);
+        var orderAmount = orderItemUnitPrice * totalQty;
+        if (selectedCode == itemcode) {
+            selectedRow.find('td:nth-child(3)').replaceWith('<td>' + totalQty + '</td>');
+            selectedRow.find('td:nth-child(5)').replaceWith('<td>' + orderAmount + '</td>');
+            totalQty = 0;
+            orderAmount = 0;
+            return true;
+        }
+
+    }
 }
