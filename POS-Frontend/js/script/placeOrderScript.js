@@ -185,3 +185,25 @@ function clearFields() {
     $("#selectItemCode").focus();
 }
 
+function checkAlreadyInTable() {
+    var selectedCode = $("#selectItemCode").val();
+    var orderItemQty = $("#orderQtyField").val();
+    var orderItemUnitPrice = $("#txtitemPrice").text();
+    var x = 0;
+    while($("tbody tr").length > x){
+        x++;
+        var itemcode = $("table tr:nth-child("+x+") td:nth-child(1)").text();
+        var itemQty = $("table tr:nth-child("+x+") td:nth-child(3)").text();
+        var selectedRow = $("table tr:nth-child("+x+")");
+        var totalQty = parseInt(itemQty) + parseInt(orderItemQty);
+        var orderAmount = orderItemUnitPrice * totalQty;
+        if (selectedCode == itemcode) {
+            selectedRow.find('td:nth-child(3)').replaceWith('<td>' + totalQty + '</td>');
+            selectedRow.find('td:nth-child(5)').replaceWith('<td>' + orderAmount + '</td>');
+            totalQty = 0;
+            orderAmount = 0;
+            return true;
+        }
+
+    }
+}
