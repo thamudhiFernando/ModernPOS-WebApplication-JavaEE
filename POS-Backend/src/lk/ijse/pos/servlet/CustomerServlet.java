@@ -28,9 +28,9 @@ public class CustomerServlet extends HttpServlet {
         JsonReader reader = Json.createReader(inputStream);
         JsonObject customer = reader.readObject();
 
-        String id = customer.getString("id");
-        String name = customer.getString("name");
-        String address = customer.getString("address");
+        String custId = customer.getString("custId");
+        String custName = customer.getString("custName");
+        String custAddress = customer.getString("custAddress");
 
         BasicDataSource dbpool = (BasicDataSource) getServletContext().getAttribute("dbpool");
         Connection connection = null;
@@ -38,9 +38,9 @@ public class CustomerServlet extends HttpServlet {
         try {
             connection = dbpool.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO Customer VALUES (?,?,?)");
-            preparedStatement.setObject(1, id);
-            preparedStatement.setObject(2, name);
-            preparedStatement.setObject(3, address);
+            preparedStatement.setObject(1, custId);
+            preparedStatement.setObject(2, custName);
+            preparedStatement.setObject(3, custAddress);
 
             boolean result = preparedStatement.executeUpdate() > 0;
 
@@ -77,13 +77,13 @@ public class CustomerServlet extends HttpServlet {
 
                 JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
                 while (resultSet.next()) {
-                    String id = resultSet.getString(1);
-                    String name = resultSet.getString(2);
-                    String address = resultSet.getString(3);
+                    String custId = resultSet.getString(1);
+                    String custName = resultSet.getString(2);
+                    String custAddress = resultSet.getString(3);
                     arrayBuilder.add(Json.createObjectBuilder()
-                            .add("id", id)
-                            .add("name", name)
-                            .add("address", address)
+                            .add("custId", custId)
+                            .add("custName", custName)
+                            .add("custAddress", custAddress)
                             .build()
                     );
                 }
@@ -108,13 +108,13 @@ public class CustomerServlet extends HttpServlet {
 
                 JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
                 while (resultSet.next()) {
-                    String id = resultSet.getString(1);
-                    String name = resultSet.getString(2);
-                    String address = resultSet.getString(3);
+                    String custId = resultSet.getString(1);
+                    String custName = resultSet.getString(2);
+                    String custAddress = resultSet.getString(3);
                     arrayBuilder.add(Json.createObjectBuilder()
-                            .add("id", id)
-                            .add("name", name)
-                            .add("address", address)
+                            .add("custId", custId)
+                            .add("custName", custName)
+                            .add("custAddress", custAddress)
                             .build()
                     );
                 }
@@ -134,24 +134,24 @@ public class CustomerServlet extends HttpServlet {
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String pathInfo = req.getPathInfo();
-        String id = pathInfo.substring(1);
+        String custId = pathInfo.substring(1);
         if (pathInfo != null) {
             ServletInputStream inputStream = req.getInputStream();
             JsonReader reader = Json.createReader(inputStream);
             JsonObject customer = reader.readObject();
 
-            String name = customer.getString("name");
-            String address = customer.getString("address");
+            String custName = customer.getString("custName");
+            String custAddress = customer.getString("custAddress");
 
             BasicDataSource dbpool = (BasicDataSource) getServletContext().getAttribute("dbpool");
             Connection connection = null;
             PrintWriter out = resp.getWriter();
             try {
                 connection = dbpool.getConnection();
-                PreparedStatement preparedStatement = connection.prepareStatement("UPDATE Customer SET custName=?,CustAddress=? WHERE custID=?");
-                preparedStatement.setObject(1, id);
-                preparedStatement.setObject(2, name);
-                preparedStatement.setObject(3, address);
+                PreparedStatement preparedStatement = connection.prepareStatement("UPDATE Customer SET custName=?,custAddress=? WHERE custID=?");
+                preparedStatement.setObject(1, custId);
+                preparedStatement.setObject(2, custName);
+                preparedStatement.setObject(3, custAddress);
 
                 boolean result = preparedStatement.executeUpdate() < 0;
 
@@ -179,14 +179,14 @@ public class CustomerServlet extends HttpServlet {
         JsonReader reader = Json.createReader(inputStream);
         JsonObject customer = reader.readObject();
 
-        String id = customer.getString("id");
+        String custId = customer.getString("custID");
 
         BasicDataSource dbpool = (BasicDataSource) getServletContext().getAttribute("dbpool");
         Connection connection = null;
         PrintWriter out = resp.getWriter();
         try {
             connection = dbpool.getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM Customer where custID='" + id  +"'");
+            PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM Customer where custID='" + custId  +"'");
 
             boolean result = preparedStatement.executeUpdate() > 0;
 

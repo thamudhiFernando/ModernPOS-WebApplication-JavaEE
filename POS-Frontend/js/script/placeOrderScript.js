@@ -19,11 +19,11 @@ function getAllCustomers(value) {
     $.ajax(ajaxGetConfig).done(function (customerList,textStatus,iqxhr) {
         customerList.forEach(function (customer) {
             if (value =="clicked") {
-                if (customer.id == $("#selectCustomerID").val()){
-                    $("#customerName").text(customer.name);
+                if (customer.custId == $("#selectCustomerID").val()){
+                    $("#customerName").text(customer.custName);
                 }
             }else if (value =="onload") {
-                $("#selectCustomerID").append("<option>"+customer.id+"</option>");
+                $("#selectCustomerID").append("<option>"+customer.custId+"</option>");
             }
         });
     }).fail(function (jqxhr, textStatus, errorMsg) {
@@ -46,8 +46,8 @@ function getAllItems(value) {
             if(value == "clicked"){
                 if (item.code == $("#selectItemCode").val()){
                     $("#txtitemName").text(item.description);
-                    $("#txtitemQty").text(item.orderqty);
                     $("#txtitemPrice").text(item.unitPrice);
+                    $("#txtitemQty").text(item.orderqty);
                 }
             }else if (value == "onload") {
                 $("#selectItemCode").append("<option>"+item.code+"</option>");

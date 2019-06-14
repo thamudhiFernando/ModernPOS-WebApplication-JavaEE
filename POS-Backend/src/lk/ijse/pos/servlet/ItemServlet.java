@@ -41,8 +41,8 @@ public class ItemServlet extends HttpServlet {
             PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO Item VALUES (?,?,?,?)");
             preparedStatement.setObject(1, code);
             preparedStatement.setObject(2, description);
-            preparedStatement.setObject(3, orderqty);
-            preparedStatement.setObject(4, unitPrice);
+            preparedStatement.setObject(4, orderqty);
+            preparedStatement.setObject(3, unitPrice);
 
             boolean result = preparedStatement.executeUpdate() > 0;
 
@@ -81,14 +81,14 @@ public class ItemServlet extends HttpServlet {
                 while (resultSet.next()) {
                     String code = resultSet.getString(1);
                     String description = resultSet.getString(2);
-                    int orderqty = resultSet.getInt(3);
-                    double unitprice = resultSet.getDouble(4);
+                    int orderqty = resultSet.getInt(4);
+                    double unitprice = resultSet.getDouble(3);
 
                     arrayBuilder.add(Json.createObjectBuilder()
                             .add("code", code)
                             .add("description", description)
-                            .add("orderqty", orderqty)
                             .add("unitPrice", unitprice)
+                            .add("orderqty", orderqty)
                             .build()
                     );
                 }
@@ -183,6 +183,7 @@ public class ItemServlet extends HttpServlet {
 
         }
     }
+
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("application/json");

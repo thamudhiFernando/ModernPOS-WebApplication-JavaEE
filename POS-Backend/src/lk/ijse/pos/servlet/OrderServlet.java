@@ -24,6 +24,7 @@ public class OrderServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        resp.setContentType("application/json");
         ServletInputStream inputStream = req.getInputStream();
         JsonReader reader = Json.createReader(inputStream);
         JsonArray completeArray = reader.readArray();
@@ -74,7 +75,7 @@ public class OrderServlet extends HttpServlet {
                 if (resultSet.next()){
                     oldqty = resultSet.getInt(1);
                 }
-
+                System.out.println("qty is : "+oldqty);
                 PreparedStatement updateStatement = connection.prepareStatement("UPDATE item SET QtyOnHand=? where code=?");
                 updateStatement.setString(1, String.valueOf(oldqty-Integer.parseInt(orderqty)));
                 updateStatement.setString(2,code);

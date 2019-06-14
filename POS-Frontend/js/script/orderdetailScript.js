@@ -1,17 +1,17 @@
 switch (document.readyState) {
     case "loading":
-        clearFields();
-        getAllCustomers();
+        getAllOrders();
         break;
     default:
         alert("nothing");
 }
 
-//--------------------------------------load Customers------------------------------------
-function getAllCustomers() {
+
+//--------------------------------------load orders------------------------------------
+function getAllOrders() {
     var ajaxGetConfig = {
         method: "GET",
-        url: "http://localhost:8080/ajax/customer",
+        url: "http://localhost:8080/ajax/order",
         async: true,
     }
 
@@ -54,49 +54,3 @@ function getAllCustomers() {
         console.log(errorMsg);
     });
 }
-
-//--------------------------------------save Customer-------------------------------------
-//--------------------------------------load Customers------------------------------------
-$("#btn-save").click(function () {
-    var custId = $("#txtCustomerID").val();
-    var custName = $("#txtCustomerIName").val();
-    var custAddress = $("#txtCustomerAddress").val();
-
-    var  newCustomer = {custId: custId, custName: custName, custAddress: custAddress};
-
-    var postAjaxConfig = {
-        method: "POST",
-        url: "http://localhost:8080/ajax/customer",
-        async: true,
-        data: JSON.stringify(newCustomer),
-        contentType: "application/json"
-    }
-
-    $.ajax(postAjaxConfig).done(function (response, textStatus, jqxhr) {
-        console.log(response)
-        if (response) {
-            alert("Customer has been successfully added");
-            clearFields();
-            getAllCustomers();
-        }else {
-            alert("Failed to save customer");
-        }
-    }).fail(function (jqxhr, textStatus, errorMsg) {
-        console.log(errorMsg);
-    });
-})
-
-//--------------------------------------click clear button-------------------------------------
-$("#btn-clear").click(function () {
-    console.log("clear")
-    clearFields();
-})
-
-
-//--------------------------------------clear Field-------------------------------------
-function clearFields() {
-    $("#txtCustomerID").val("");
-    $("#txtCustomerIName").val("");
-    $("#txtCustomerAddress").val("");
-}
-
