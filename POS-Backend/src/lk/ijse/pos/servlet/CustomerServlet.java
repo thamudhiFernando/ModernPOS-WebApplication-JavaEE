@@ -23,6 +23,7 @@ import java.sql.SQLException;
 public class CustomerServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        resp.setContentType("application/json");
         ServletInputStream inputStream = req.getInputStream();
         JsonReader reader = Json.createReader(inputStream);
         JsonObject customer = reader.readObject();
@@ -173,6 +174,7 @@ public class CustomerServlet extends HttpServlet {
 
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        resp.setContentType("application/json");
         ServletInputStream inputStream = req.getInputStream();
         JsonReader reader = Json.createReader(inputStream);
         JsonObject customer = reader.readObject();

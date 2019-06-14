@@ -31,6 +31,7 @@ function getAllCustomers() {
         //--------------------------------------delete Customer-------------------------------------
         $('tbody tr td img').click(function () {
             var id = $(this).parents('tr').find('td:first-child').html();
+            var row =  $(this).parents('tr');
             console.log(id)
             var deleteAjaxConfig ={
                 method:"DELETE",
@@ -43,7 +44,7 @@ function getAllCustomers() {
 
             $.ajax(deleteAjaxConfig).done(function (data) {
                 alert("Customer has been successfully Deleted");
-                $(this).parents('tr').remove();
+                $(row).remove();
             }).fail(function (error) {
                 console.log(error);
                 alert("Failed to delete Customer");

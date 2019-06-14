@@ -1,4 +1,3 @@
-
 switch (document.readyState) {
     case "loading":
         clearFields();
@@ -7,6 +6,7 @@ switch (document.readyState) {
     default:
         alert("nothing");
 }
+
 //--------------------------------------load Items------------------------------------
 function getAllItems() {
     var ajaxGetConfig = {
@@ -18,7 +18,6 @@ function getAllItems() {
     $.ajax(ajaxGetConfig).done(function (itemList,textStatus,iqxhr) {
         $("table tbody tr").remove();
         itemList.forEach(function (item) {
-            console.log(item.unitPrice)
             var html = "<tr>"
                 + "<td>" + item.code + "</td>"
                 + "<td>" + item.description + "</td>"
@@ -27,6 +26,30 @@ function getAllItems() {
                 + "<td><img src='images/recyclebin.png' width='30px'></td>"
                 + "</tr>"
             $("table tbody").append(html);
+        });
+
+
+        //--------------------------------------delete Item-------------------------------------
+        $('tbody tr td img').click(function () {
+            var code = $(this).parents('tr').find('td:first-child').html();
+            var row =  $(this).parents('tr');
+            console.log(code)
+            var deleteAjaxConfig ={
+                method:"DELETE",
+                url:"http://localhost:8080/ajax/item",
+                async:true,
+                dataType: 'json',
+                contentType: 'application/json',
+                data:JSON.stringify({code:code})
+            }
+
+            $.ajax(deleteAjaxConfig).done(function (data) {
+                alert("Item has been successfully Deleted");
+                $(row).remove();
+            }).fail(function (error) {
+                console.log(error);
+                alert("Failed to delete Item");
+            });
         });
     }).fail(function (jqxhr, textStatus, errorMsg) {
         console.log(errorMsg);

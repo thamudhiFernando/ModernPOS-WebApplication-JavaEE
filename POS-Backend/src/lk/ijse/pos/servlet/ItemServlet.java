@@ -23,6 +23,7 @@ import java.sql.SQLException;
 public class ItemServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        resp.setContentType("application/json");
         ServletInputStream inputStream = req.getInputStream();
         JsonReader reader = Json.createReader(inputStream);
         JsonObject item = reader.readObject();
@@ -139,6 +140,7 @@ public class ItemServlet extends HttpServlet {
 
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        resp.setContentType("application/json");
         String pathInfo = req.getPathInfo();
         String code = pathInfo.substring(1);
 
@@ -183,6 +185,7 @@ public class ItemServlet extends HttpServlet {
     }
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        resp.setContentType("application/json");
         ServletInputStream inputStream = req.getInputStream();
         JsonReader reader = Json.createReader(inputStream);
         JsonObject item = reader.readObject();
@@ -194,7 +197,7 @@ public class ItemServlet extends HttpServlet {
         PrintWriter out = resp.getWriter();
         try {
             connection = dbpool.getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM Item where code=" + code);
+            PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM Item where code='" + code  +"'");
 
             boolean result = preparedStatement.executeUpdate() > 0;
 

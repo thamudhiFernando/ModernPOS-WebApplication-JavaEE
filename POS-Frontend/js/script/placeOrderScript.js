@@ -22,7 +22,7 @@ function getAllCustomers(value) {
                 if (customer.id == $("#selectCustomerID").val()){
                     $("#customerName").text(customer.name);
                 }
-            }else if ("onload") {
+            }else if (value =="onload") {
                 $("#selectCustomerID").append("<option>"+customer.id+"</option>");
             }
         });
@@ -49,7 +49,7 @@ function getAllItems(value) {
                     $("#txtitemQty").text(item.orderqty);
                     $("#txtitemPrice").text(item.unitPrice);
                 }
-            }else if ("onload") {
+            }else if (value == "onload") {
                 $("#selectItemCode").append("<option>"+item.code+"</option>");
             }
         });
