@@ -1,4 +1,4 @@
-# WebBasedWholeSalePOS
+# WebBased-ModernPOS
 
 ### Installation
 
