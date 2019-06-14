@@ -1,15 +1,15 @@
 switch (document.readyState) {
     case "loading":
         // clearFields();
-        getAllCustomers();
-        getAllItems();
+        getAllCustomers("onload");
+        getAllItems("onload");
         break;
     default:
         alert("nothing");
 }
 
 //--------------------------------------load Customers------------------------------------
-function getAllCustomers() {
+function getAllCustomers(value) {
     var ajaxGetConfig = {
         method: "GET",
         url: "http://localhost:8080/ajax/customer",
@@ -17,9 +17,14 @@ function getAllCustomers() {
     }
 
     $.ajax(ajaxGetConfig).done(function (customerList,textStatus,iqxhr) {
-        $("table tbody tr").remove();
         customerList.forEach(function (customer) {
-            $("#selectCustomerID").append("<option>"+customer.id+"</option>");
+            if (value =="clicked") {
+                if (customer.id == $("#selectCustomerID").val()){
+                    $("#customerName").text(customer.name);
+                }
+            }else if ("onload") {
+                $("#selectCustomerID").append("<option>"+customer.id+"</option>");
+            }
         });
     }).fail(function (jqxhr, textStatus, errorMsg) {
         console.log(errorMsg);
@@ -27,7 +32,9 @@ function getAllCustomers() {
 }
 
 //--------------------------------------load Items------------------------------------
-function getAllItems() {
+function getAllItems(value) {
+    $("#orderQtyField").val("");
+
     var ajaxGetConfig = {
         method: "GET",
         url: "http://localhost:8080/ajax/item",
@@ -35,9 +42,16 @@ function getAllItems() {
     }
 
     $.ajax(ajaxGetConfig).done(function (itemList,textStatus,iqxhr) {
-        $("table tbody tr").remove();
         itemList.forEach(function (item) {
-            $("#selectItemCode").append("<option>"+item.code+"</option>");
+            if(value == "clicked"){
+                if (item.code == $("#selectItemCode").val()){
+                    $("#txtitemName").text(item.description);
+                    $("#txtitemQty").text(item.orderqty);
+                    $("#txtitemPrice").text(item.unitPrice);
+                }
+            }else if ("onload") {
+                $("#selectItemCode").append("<option>"+item.code+"</option>");
+            }
         });
     }).fail(function (jqxhr, textStatus, errorMsg) {
         console.log(errorMsg);
@@ -47,43 +61,13 @@ function getAllItems() {
 
 //--------------------------------------Customer Combo Select------------------------------------
 $("#selectCustomerID").click(function () {
-    var ajaxGetConfig = {
-        method: "GET",
-        url: "http://localhost:8080/ajax/customer",
-        async: true,
-    }
-
-    $.ajax(ajaxGetConfig).done(function (customerList,textStatus,iqxhr) {
-        customerList.forEach(function (customer) {
-            if (customer.id == $("#selectCustomerID").val()){
-                $("#customerName").text(customer.name);
-            }
-        });
-    }).fail(function (jqxhr, textStatus, errorMsg) {
-        console.log(errorMsg);
-    });
+    getAllCustomers("clicked");
 })
 
 
 //----------------------------------------Item Combo Select--------------------------------------
 $("#selectItemCode").click(function () {
-    var ajaxGetConfig = {
-        method: "GET",
-        url: "http://localhost:8080/ajax/item",
-        async: true,
-    }
-
-    $.ajax(ajaxGetConfig).done(function (itemList,textStatus,iqxhr) {
-        itemList.forEach(function (item) {
-            if (item.code == $("#selectItemCode").val()){
-                $("#txtitemName").text(item.description);
-                $("#txtitemQty").text(item.qty);
-                $("#txtitemPrice").text(item.unitPrice);
-            }
-        });
-    }).fail(function (jqxhr, textStatus, errorMsg) {
-        console.log(errorMsg);
-    });
+    getAllItems("clicked");
 })
 
 var total = 0.00;
@@ -121,13 +105,34 @@ $("#save-order").click(function () {
     var orderamount = $("#total-heading").text();
     var custid = $("#selectCustomerID").val()
 
-    var  neworder = {orderid: orderid, orderdate: orderdate, orderamount: orderamount,custid:custid};
+    var order = [];
+    var orderdetail = [];
+    var completeArray = [];
+    var i=0;
+    order.push(orderid,orderdate,orderamount,custid)
+
+    while($("tbody tr").length > i){
+        i++;
+        var code = $("tbody tr:nth-child("+i+") td:nth-child(1)").text();
+        var orderqty = $("tbody tr:nth-child("+i+") td:nth-child(3)").text();
+        var amount = $("tbody tr:nth-child("+i+") td:nth-child(5)").text();
+
+        var obj = {
+            code:code,
+            orderqty:orderqty,
+            amount:amount
+        };
+        orderdetail.push(obj);
+    }
+
+    completeArray.push(order);
+    completeArray.push(orderdetail);
 
     var postAjaxConfig = {
         method: "POST",
         url: "http://localhost:8080/ajax/order",
         async: true,
-        data: JSON.stringify(neworder),
+        data: JSON.stringify(completeArray),
         contentType: "application/json"
     }
 

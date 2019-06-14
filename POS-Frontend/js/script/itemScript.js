@@ -22,7 +22,7 @@ function getAllItems() {
             var html = "<tr>"
                 + "<td>" + item.code + "</td>"
                 + "<td>" + item.description + "</td>"
-                + "<td>" + item.qty + "</td>"
+                + "<td>" + item.orderqty + "</td>"
                 + "<td>" + item.unitPrice + "</td>"
                 + "<td><img src='images/recyclebin.png' width='30px'></td>"
                 + "</tr>"
@@ -38,10 +38,10 @@ function getAllItems() {
 $("#btn-save").click(function () {
     var code = $("#txtItemCode").val();
     var description = $("#txtItemDescription").val();
-    var qty = $("#txtItemQty").val();
+    var orderqty = $("#txtItemQty").val();
     var unitprice = $("#txtItemUnitPrice").val();
 
-    var  newItem = {code: code, description: description, qty: qty, unitPrice:unitprice};
+    var  newItem = {code: code, description: description, orderqty: orderqty, unitPrice:unitprice};
 
     var postAjaxConfig = {
         method: "POST",
@@ -51,33 +51,12 @@ $("#btn-save").click(function () {
         contentType: "application/json"
     }
 
-    var ajaxGetConfig = {
-        method: "GET",
-        url: "http://localhost:8080/ajax/item",
-        async: true,
-    }
-
     $.ajax(postAjaxConfig).done(function (response, textStatus, jqxhr) {
         console.log(response)
         if (response) {
             alert("Item has been successfully added");
             clearFields();
-            $.ajax(ajaxGetConfig).done(function (itemList,textStatus,iqxhr) {
-                $("table tbody tr").remove();
-                itemList.forEach(function (item) {
-                    console.log(item.unitPrice)
-                    var html = "<tr>"
-                        + "<td>" + item.code + "</td>"
-                        + "<td>" + item.description + "</td>"
-                        + "<td>" + item.qty + "</td>"
-                        + "<td>" + item.unitPrice + "</td>"
-                        + "<td><img src='images/recyclebin.png' width='30px'></td>"
-                        + "</tr>"
-                    $("table tbody").append(html);
-                });
-            }).fail(function (jqxhr, textStatus, errorMsg) {
-                console.log(errorMsg);
-            });
+            getAllItems();
         }else {
             alert("Failed to save Item");
         }

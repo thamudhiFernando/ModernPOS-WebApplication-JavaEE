@@ -19,7 +19,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-@WebServlet(urlPatterns = "/item")
+@WebServlet(urlPatterns = "/item/*")
 public class ItemServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -29,7 +29,7 @@ public class ItemServlet extends HttpServlet {
 
         String code = item.getString("code");
         String description = item.getString("description");
-        String qty = item.getString("qty");
+        String orderqty = item.getString("orderqty");
         String unitPrice = item.getString("unitPrice");
 
         BasicDataSource dbpool = (BasicDataSource) getServletContext().getAttribute("dbpool");
@@ -40,7 +40,7 @@ public class ItemServlet extends HttpServlet {
             PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO Item VALUES (?,?,?,?)");
             preparedStatement.setObject(1, code);
             preparedStatement.setObject(2, description);
-            preparedStatement.setObject(3, qty);
+            preparedStatement.setObject(3, orderqty);
             preparedStatement.setObject(4, unitPrice);
 
             boolean result = preparedStatement.executeUpdate() > 0;
@@ -80,13 +80,13 @@ public class ItemServlet extends HttpServlet {
                 while (resultSet.next()) {
                     String code = resultSet.getString(1);
                     String description = resultSet.getString(2);
-                    int qty = resultSet.getInt(3);
+                    int orderqty = resultSet.getInt(3);
                     double unitprice = resultSet.getDouble(4);
 
                     arrayBuilder.add(Json.createObjectBuilder()
                             .add("code", code)
                             .add("description", description)
-                            .add("qty", qty)
+                            .add("orderqty", orderqty)
                             .add("unitPrice", unitprice)
                             .build()
                     );
@@ -114,12 +114,12 @@ public class ItemServlet extends HttpServlet {
                 while (resultSet.next()) {
                     String code = resultSet.getString(1);
                     String description = resultSet.getString(2);
-                    int qty = resultSet.getInt(3);
+                    int orderqty = resultSet.getInt(3);
                     double unitprice = resultSet.getDouble(4);
                     arrayBuilder.add(Json.createObjectBuilder()
                             .add("code", code)
                             .add("description", description)
-                            .add("qty", qty)
+                            .add("orderqty", orderqty)
                             .add("unitprice", unitprice)
                             .build()
                     );

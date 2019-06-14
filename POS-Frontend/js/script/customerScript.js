@@ -1,4 +1,3 @@
-
 switch (document.readyState) {
     case "loading":
         clearFields();
@@ -27,6 +26,29 @@ function getAllCustomers() {
                 + "</tr>"
             $("table tbody").append(html);
         });
+
+
+        //--------------------------------------delete Customer-------------------------------------
+        $('tbody tr td img').click(function () {
+            var id = $(this).parents('tr').find('td:first-child').html();
+            console.log(id)
+            var deleteAjaxConfig ={
+                method:"DELETE",
+                url:"http://localhost:8080/ajax/customer",
+                async:true,
+                dataType: 'json',
+                contentType: 'application/json',
+                data:JSON.stringify({id:id})
+            }
+
+            $.ajax(deleteAjaxConfig).done(function (data) {
+                alert("Customer has been successfully Deleted");
+                $(this).parents('tr').remove();
+            }).fail(function (error) {
+                console.log(error);
+                alert("Failed to delete Customer");
+            });
+        });
     }).fail(function (jqxhr, textStatus, errorMsg) {
         console.log(errorMsg);
     });
@@ -49,31 +71,12 @@ $("#btn-save").click(function () {
         contentType: "application/json"
     }
 
-    var ajaxGetConfig = {
-        method: "GET",
-        url: "http://localhost:8080/ajax/customer",
-        async: true,
-    }
-
     $.ajax(postAjaxConfig).done(function (response, textStatus, jqxhr) {
         console.log(response)
         if (response) {
             alert("Customer has been successfully added");
             clearFields();
-            $.ajax(ajaxGetConfig).done(function (customerList,textStatus,iqxhr) {
-                $("table tbody tr").remove();
-                customerList.forEach(function (customer) {
-                    var html = "<tr>"
-                        + "<td>" + customer.id + "</td>"
-                        + "<td>" + customer.name + "</td>"
-                        + "<td>" + customer.address + "</td>"
-                        + "<td><img src='images/recyclebin.png' width='30px'></td>"
-                        + "</tr>"
-                    $("table tbody").append(html);
-                });
-            }).fail(function (jqxhr, textStatus, errorMsg) {
-                console.log(errorMsg);
-            });
+            getAllCustomers();
         }else {
             alert("Failed to save customer");
         }

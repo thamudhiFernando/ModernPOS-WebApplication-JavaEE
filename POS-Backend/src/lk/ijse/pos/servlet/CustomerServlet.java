@@ -19,7 +19,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-@WebServlet(urlPatterns = "/customer")
+@WebServlet(urlPatterns = "/customer/*")
 public class CustomerServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -102,7 +102,7 @@ public class CustomerServlet extends HttpServlet {
 
             try {
                 connection = dbpool.getConnection();
-                PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM Customer WHERE id=" + pathInfo);
+                PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM Customer WHERE custID=" + pathInfo);
                 ResultSet resultSet = preparedStatement.executeQuery();
 
                 JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
@@ -147,7 +147,7 @@ public class CustomerServlet extends HttpServlet {
             PrintWriter out = resp.getWriter();
             try {
                 connection = dbpool.getConnection();
-                PreparedStatement preparedStatement = connection.prepareStatement("UPDATE Customer SET name=?,address=? WHERE id=?");
+                PreparedStatement preparedStatement = connection.prepareStatement("UPDATE Customer SET custName=?,CustAddress=? WHERE custID=?");
                 preparedStatement.setObject(1, id);
                 preparedStatement.setObject(2, name);
                 preparedStatement.setObject(3, address);
@@ -184,7 +184,7 @@ public class CustomerServlet extends HttpServlet {
         PrintWriter out = resp.getWriter();
         try {
             connection = dbpool.getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM Customer where id=" + id);
+            PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM Customer where custID='" + id  +"'");
 
             boolean result = preparedStatement.executeUpdate() > 0;
 

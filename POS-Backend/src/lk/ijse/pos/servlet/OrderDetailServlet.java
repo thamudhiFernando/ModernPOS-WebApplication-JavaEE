@@ -19,53 +19,13 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-@WebServlet(urlPatterns = "/orderdetail")
+@WebServlet(urlPatterns = "/orderdetail/*")
 public class OrderDetailServlet extends HttpServlet {
-    @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        ServletInputStream inputStream = req.getInputStream();
-        JsonReader reader = Json.createReader(inputStream);
-        JsonObject orderdetail = reader.readObject();
-
-        String orderid = orderdetail.getString("orderid");
-        String code = orderdetail.getString("code");
-        String orderqty = orderdetail.getString("orderqty");
-        String amount = orderdetail.getString("amount");
-
-        BasicDataSource dbpool = (BasicDataSource) getServletContext().getAttribute("dbpool");
-        Connection connection = null;
-        PrintWriter out = resp.getWriter();
-        try {
-            connection = dbpool.getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO OrderDetail VALUES (?,?,?,?)");
-            preparedStatement.setObject(1, orderid);
-            preparedStatement.setObject(2, code);
-            preparedStatement.setObject(3, orderqty);
-            preparedStatement.setObject(4, amount);
-
-            boolean result = preparedStatement.executeUpdate() > 0;
-
-            if (result) {
-                out.println("true");
-            } else {
-                out.println("false");
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                connection.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-    }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("application/json");
         PrintWriter out = resp.getWriter();
-
 
         BasicDataSource dbpool = (BasicDataSource) getServletContext().getAttribute("dbpool");
         Connection connection = null;
