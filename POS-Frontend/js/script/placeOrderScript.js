@@ -149,3 +149,12 @@ $("#save-order").click(function () {
     });
 })
 
+
+function clearFields() {
+    $("table tbody tr").remove();
+    $("#orderQtyField").val("");
+    $("#txtitemName").text("");
+    $("#txtitemQty").text("");
+    $("#txtitemPrice").text("");
+    total = 0;
+}
