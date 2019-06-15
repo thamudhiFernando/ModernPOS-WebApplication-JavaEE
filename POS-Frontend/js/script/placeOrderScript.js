@@ -3,6 +3,8 @@ switch (document.readyState) {
         // clearFields();
         getAllCustomers("onload");
         getAllItems("onload");
+        getDate();
+        generateOrderID();
         break;
     default:
         alert("nothing");
@@ -168,6 +170,7 @@ $("#save-order").click(function () {
             $("#customerName").text("");
             total = 0;
             clearFields();
+            generateOrderID();
         }else {
             alert("Failed to save order");
         }
@@ -204,6 +207,37 @@ function checkAlreadyInTable() {
             orderAmount = 0;
             return true;
         }
-
     }
+}
+function getDate(){
+    var date = new Date();
+
+    var month = date.getMonth()+1;
+    var day = date.getDate();
+
+    var output = date.getFullYear() + '/' +
+        (month<10 ? '0' : '') + month + '/' +
+        (day<10 ? '0' : '') + day;
+
+    $("#OrderDate").text(output);
+}
+
+function generateOrderID() {
+    var ajaxGetConfig = {
+        method: "GET",
+        url: "http://localhost:8080/ajax/order",
+        async: true,
+    }
+
+    $.ajax(ajaxGetConfig).done(function (orderList,textStatus,iqxhr) {
+        var orderid;
+        orderList.forEach(function (orders) {
+            orderid = orders.orderid;
+        });
+        var value = orderid.substr(2,5);
+        console.log("OD00"+(parseInt(value)+1))
+        $("#orderID").text("OD00"+(parseInt(value)+1));
+    }).fail(function (jqxhr, textStatus, errorMsg) {
+        console.log(errorMsg);
+    });
 }

@@ -2,10 +2,7 @@ package lk.ijse.pos.servlet;
 
 import org.apache.commons.dbcp2.BasicDataSource;
 
-import javax.json.Json;
-import javax.json.JsonArray;
-import javax.json.JsonObject;
-import javax.json.JsonReader;
+import javax.json.*;
 import javax.servlet.ServletException;
 import javax.servlet.ServletInputStream;
 import javax.servlet.annotation.WebServlet;
@@ -102,6 +99,40 @@ public class OrderServlet extends HttpServlet {
             } catch (SQLException e1) {
                 e1.printStackTrace();
             }
+            e.printStackTrace();
+        } finally {
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        resp.setContentType("application/json");
+        PrintWriter out = resp.getWriter();
+
+        BasicDataSource dbpool = (BasicDataSource) getServletContext().getAttribute("dbpool");
+        Connection connection = null;
+
+        try {
+            connection = dbpool.getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement("SELECT orderID FROM Orders");
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
+
+            while (resultSet.next()) {
+                String orderid = resultSet.getString(1);
+                arrayBuilder.add(Json.createObjectBuilder()
+                        .add("orderid", orderid)
+                        .build()
+                );
+            }
+            out.println(arrayBuilder.build().toString());
+        } catch (SQLException e) {
             e.printStackTrace();
         } finally {
             try {
