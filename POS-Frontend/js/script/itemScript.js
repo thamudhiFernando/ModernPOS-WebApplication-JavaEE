@@ -66,29 +66,35 @@ $("#btn-save").click(function () {
     var orderqty = $("#txtItemQty").val();
     var unitprice = $("#txtItemUnitPrice").val();
 
-    var  newItem = {code: code, description: description, orderqty: orderqty, unitPrice:unitprice};
+    var isEmpty = checkEmpty(description,orderqty,unitprice);
+    if (isEmpty) {
+        var isValidate = checkValidate(description,orderqty,unitprice);
+        if (isValidate) {
+            var  newItem = {code: code, description: description, orderqty: orderqty, unitPrice:unitprice};
 
-    var postAjaxConfig = {
-        method: "POST",
-        url: "http://localhost:8080/ajax/item",
-        async: true,
-        data: JSON.stringify(newItem),
-        contentType: "application/json"
-    }
+            var postAjaxConfig = {
+                method: "POST",
+                url: "http://localhost:8080/ajax/item",
+                async: true,
+                data: JSON.stringify(newItem),
+                contentType: "application/json"
+            }
 
-    $.ajax(postAjaxConfig).done(function (response, textStatus, jqxhr) {
-        console.log(response)
-        if (response) {
-            alert("Item has been successfully added");
-            clearFields();
-            getAllItems();
-            generateItemCode();
-        }else {
-            alert("Failed to save Item");
+            $.ajax(postAjaxConfig).done(function (response, textStatus, jqxhr) {
+                console.log(response)
+                if (response) {
+                    alert("Item has been successfully added");
+                    clearFields();
+                    getAllItems();
+                    generateItemCode();
+                }else {
+                    alert("Failed to save Item");
+                }
+            }).fail(function (jqxhr, textStatus, errorMsg) {
+                console.log(errorMsg);
+            });
         }
-    }).fail(function (jqxhr, textStatus, errorMsg) {
-        console.log(errorMsg);
-    });
+    }
 })
 
 
@@ -126,3 +132,77 @@ function generateItemCode() {
         console.log(errorMsg);
     });
 }
+
+
+function checkEmpty(description,qty,unitprice) {
+    if ($.trim(description).length == 0){
+        grey();
+        $("#txtItemDescription").css("border-color","red");
+        alert("Item Description is empty");
+        $("#txtItemDescription").focus();
+        return false;
+    } else if ($.trim(qty).length == 0){
+        grey();
+        $("#txtItemQty").css("border-color","red");
+        alert("Item Qty is empty");
+        $("#txtItemQty").focus();
+        return false;
+    } else if ($.trim(unitprice).length == 0){
+        grey();
+        $("#txtItemUnitPrice").css("border-color","red");
+        alert("Item UnitPrice is empty");
+        $("#txtItemUnitPrice").focus();
+        return false;
+    }else {
+        grey();
+        return true;
+    }
+};
+
+function checkValidate(description,qty,unitprice) {
+    var validateDesc = /^[A-Za-z0-9]+$/;
+    var validateQty = /^[0-9]+$/;
+    var validateUnitPrice = /^[0-9]{1,}[.][0-9]{2}$/;
+
+    if (!validateDesc.test(description)){
+        grey();
+        $("#txtItemDescription").css("border-color","red");
+        $("#txtItemDescription").focus();
+        alert("incorrect description");
+        return false;
+    }else if (!validateQty.test(qty)){
+        grey();
+        $("#txtItemQty").css("border-color","red");
+        $("#txtItemQty").focus();
+        alert("incorrect qty");
+        return false;
+    }else if (!validateUnitPrice.test(unitprice)){
+        grey();
+        $("#txtItemUnitPrice").css("border-color","red");
+        $("#txtItemUnitPrice").focus();
+        alert("incorrect unitprice - 0.00");
+        return false;
+    }else {
+        console.log("validate Success");
+        grey();
+        return true;
+    }
+}
+
+function grey() {
+    $("#txtItemDescription").css("border-color","lightgrey");
+    $("#txtItemQty").css("border-color","lightgrey");
+    $("#txtItemUnitPrice").css("border-color","lightgrey");
+}
+
+$("#txtItemDescription").click(function () {
+    grey();
+});
+
+$("#txtItemQty").click(function () {
+    grey();
+});
+
+$("#txtItemUnitPrice").click(function () {
+    grey();
+});
