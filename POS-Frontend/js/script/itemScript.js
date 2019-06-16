@@ -102,3 +102,24 @@ function clearFields() {
     $("#txtItemQty").val("");
     $("#txtItemUnitPrice").val("");
 }
+
+
+function generateItemCode() {
+    var ajaxGetConfig = {
+        method: "GET",
+        url: "http://localhost:8080/ajax/customer",
+        async: true,
+    }
+
+    $.ajax(ajaxGetConfig).done(function (customerLsit,textStatus,iqxhr) {
+        var custid;
+        customerLsit.forEach(function (custids) {
+            custid = custids.custId;
+        });
+        var value = custid.substr(1,4);
+        console.log("C00"+(parseInt(value)+1))
+        $("#txtCustomerID").val("C00"+(parseInt(value)+1));
+    }).fail(function (jqxhr, textStatus, errorMsg) {
+        console.log(errorMsg);
+    });
+}
