@@ -63,29 +63,35 @@ $("#btn-save").click(function () {
     var custName = $("#txtCustomerIName").val();
     var custAddress = $("#txtCustomerAddress").val();
 
-    var  newCustomer = {custId: custId, custName: custName, custAddress: custAddress};
+    var isEmpty = checkEmpty(custName,custAddress);
+    if (isEmpty) {
+        var isValidate = checkValidate(custName,custAddress);
+        if (isValidate) {
+            var  newCustomer = {custId: custId, custName: custName, custAddress: custAddress};
 
-    var postAjaxConfig = {
-        method: "POST",
-        url: "http://localhost:8080/ajax/customer",
-        async: true,
-        data: JSON.stringify(newCustomer),
-        contentType: "application/json"
-    }
+            var postAjaxConfig = {
+                method: "POST",
+                url: "http://localhost:8080/ajax/customer",
+                async: true,
+                data: JSON.stringify(newCustomer),
+                contentType: "application/json"
+            }
 
-    $.ajax(postAjaxConfig).done(function (response, textStatus, jqxhr) {
-        console.log(response)
-        if (response) {
-            alert("Customer has been successfully added");
-            clearFields();
-            getAllCustomers();
-            generateCustomerID();
-        }else {
-            alert("Failed to save customer");
+            $.ajax(postAjaxConfig).done(function (response, textStatus, jqxhr) {
+                console.log(response)
+                if (response) {
+                    alert("Customer has been successfully added");
+                    clearFields();
+                    getAllCustomers();
+                    generateCustomerID();
+                }else {
+                    alert("Failed to save customer");
+                }
+            }).fail(function (jqxhr, textStatus, errorMsg) {
+                console.log(errorMsg);
+            });
         }
-    }).fail(function (jqxhr, textStatus, errorMsg) {
-        console.log(errorMsg);
-    });
+    }
 })
 
 //--------------------------------------click clear button-------------------------------------
@@ -121,3 +127,59 @@ function generateCustomerID() {
         console.log(errorMsg);
     });
 }
+
+
+
+function checkEmpty(name,address) {
+    if ($.trim(name).length == 0){
+        $("#txtCustomerIName").css("border-color","red");
+        console.log("Customer Name is empty");
+        $("#txtCustomerIName").focus();
+        return false;
+    } else if ($.trim(address).length == 0){
+        $("#txtCustomerIName").css("border-color","lightgrey");
+        $("#txtCustomerAddress").css("border-color","red");
+        console.log("Customer Address is empty");
+        $("#txtCustomerAddress").focus();
+        return false;
+    }else {
+        $("#txtCustomerIName").css("border-color","lightgrey");
+        $("#txtCustomerAddress").css("border-color","lightgrey");
+        return true;
+    }
+};
+
+function checkValidate(name,address) {
+    var validateName = /^[A-Za-z]+$/;
+    var validateAddress = /^[A-Za-z0-9]+$/;
+
+    if (!validateName.test(name)){
+        $("#txtCustomerIName").css("border-color","red");
+        $("#txtCustomerIName").focus();
+        alert("incorrect name");
+        return false;
+    }else if (!validateAddress.test(address)){
+        grey();
+        $("#txtCustomerAddress").css("border-color","red");
+        $("#txtCustomerAddress").focus();
+        alert("incorrect address");
+        return false;
+    }else {
+        console.log("validate Success");
+        grey();
+        return true;
+    }
+}
+
+
+function grey() {
+    $("#txtCustomerIName").css("border-color","lightgrey");
+    $("#txtCustomerAddress").css("border-color","lightgrey");
+}
+
+$("#txtCustomerIName").click(function () {
+    grey();
+});
+$("#txtCustomerAddress").click(function () {
+    grey();
+});
