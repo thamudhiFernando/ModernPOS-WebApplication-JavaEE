@@ -45,6 +45,7 @@ function getAllCustomers() {
             $.ajax(deleteAjaxConfig).done(function (data) {
                 alert("Customer has been successfully Deleted");
                 $(row).remove();
+                generateCustomerID();
             }).fail(function (error) {
                 console.log(error);
                 alert("Failed to delete Customer");

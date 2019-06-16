@@ -2,6 +2,7 @@ switch (document.readyState) {
     case "loading":
         clearFields();
         getAllItems();
+        generateItemCode();
         break;
     default:
         alert("nothing");
@@ -46,6 +47,7 @@ function getAllItems() {
             $.ajax(deleteAjaxConfig).done(function (data) {
                 alert("Item has been successfully Deleted");
                 $(row).remove();
+                generateItemCode();
             }).fail(function (error) {
                 console.log(error);
                 alert("Failed to delete Item");
@@ -80,6 +82,7 @@ $("#btn-save").click(function () {
             alert("Item has been successfully added");
             clearFields();
             getAllItems();
+            generateItemCode();
         }else {
             alert("Failed to save Item");
         }
@@ -97,7 +100,7 @@ $("#btn-clear").click(function () {
 
 //--------------------------------------clear Field-------------------------------------
 function clearFields() {
-    $("#txtItemCode").val("");
+    // $("#txtItemCode").val("");
     $("#txtItemDescription").val("");
     $("#txtItemQty").val("");
     $("#txtItemUnitPrice").val("");
@@ -107,18 +110,18 @@ function clearFields() {
 function generateItemCode() {
     var ajaxGetConfig = {
         method: "GET",
-        url: "http://localhost:8080/ajax/customer",
+        url: "http://localhost:8080/ajax/item",
         async: true,
     }
 
-    $.ajax(ajaxGetConfig).done(function (customerLsit,textStatus,iqxhr) {
-        var custid;
-        customerLsit.forEach(function (custids) {
-            custid = custids.custId;
+    $.ajax(ajaxGetConfig).done(function (itemList,textStatus,iqxhr) {
+        var itemcode;
+        itemList.forEach(function (codes) {
+            itemcode = codes.code;
         });
-        var value = custid.substr(1,4);
-        console.log("C00"+(parseInt(value)+1))
-        $("#txtCustomerID").val("C00"+(parseInt(value)+1));
+        var value = itemcode.substr(1,4);
+        console.log("I00"+(parseInt(value)+1))
+        $("#txtItemCode").val("I00"+(parseInt(value)+1));
     }).fail(function (jqxhr, textStatus, errorMsg) {
         console.log(errorMsg);
     });
