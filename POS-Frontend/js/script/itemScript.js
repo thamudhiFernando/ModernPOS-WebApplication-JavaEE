@@ -22,8 +22,8 @@ function getAllItems() {
             var html = "<tr>"
                 + "<td>" + item.code + "</td>"
                 + "<td>" + item.description + "</td>"
-                + "<td>" + item.unitPrice + "</td>"
                 + "<td>" + item.orderqty + "</td>"
+                + "<td>" + item.unitPrice + "</td>"
                 + "<td><img src='images/recyclebin.png' width='30px'></td>"
                 + "</tr>"
             $("table tbody").append(html);
